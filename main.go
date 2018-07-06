@@ -6,6 +6,8 @@ import (
 	"log"
 	"encoding/json"
 	"fmt"
+	"strings"
+	"net/url"
 )
 
 func main() {
@@ -16,16 +18,25 @@ func main() {
 }
 
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
-	r.ParseForm()
+	_ = r.ParseForm()
+	//Should do err check against parse form.
 	data := r.Form
-	log.Printf("%v", data)
 	w.Header().Add("Content-Type", "application/json")
-	jsonResp, _ := json.Marshal(struct {
-		Type string `json:"response_type"`
-		Text string `json:"text"`
-	}{
-		Type: "ephemeral",
-		Text: fmt.Sprint("Got it!"),
-	})
+	response := "Got it!"
+	command := strings.Fields(data.Get("text"))
+	if len(command) == 0 {
+		go AlertPeopleAndChannels(data)
+		response += " Alerting people now."
+	}
+	jsonResp, _ := json.Marshal(JsonResponse{Type:"ephemeral", Text:strings.TrimSpace(response)})
 	fmt.Fprint(w, string(jsonResp))
+}
+
+func AlertPeopleAndChannels(values url.Values) {
+	fmt.Println(values)
+}
+
+type JsonResponse struct {
+	Type string `json:"response_type"`
+	Text string `json:"text"`
 }
