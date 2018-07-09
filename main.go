@@ -8,13 +8,18 @@ import (
 	"fmt"
 	"strings"
 	"net/url"
+	"strconv"
+	"os"
 )
 
 func main() {
 	r := mux.NewRouter()
 	r.HandleFunc("/", HomeHandler).Name("home").Methods("POST")
 
-	log.Fatal(http.ListenAndServe(":80", r))
+	_, err := strconv.Atoi(os.Getenv("PORT"))
+	if err == nil {
+		log.Fatal(http.ListenAndServe(":"+os.Getenv("PORT"), r))
+	}
 }
 
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
