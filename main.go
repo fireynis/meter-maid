@@ -14,7 +14,7 @@ func main() {
 	r := mux.NewRouter()
 	r.HandleFunc("/", HomeHandler).Name("home").Methods("POST")
 
-	log.Fatal(http.ListenAndServe(":80", r))
+	log.Fatal(http.ListenAndServe(":8080", r))
 }
 
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
