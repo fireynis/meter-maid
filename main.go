@@ -14,7 +14,7 @@ func main() {
 	r := mux.NewRouter()
 	r.HandleFunc("/", HomeHandler).Name("home").Methods("POST")
 
-	log.Fatal(http.ListenAndServe(":4390", r))
+	log.Fatal(http.ListenAndServe(":80", r))
 }
 
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
@@ -26,7 +26,7 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	command := strings.Fields(data.Get("text"))
 	if len(command) == 0 {
 		go AlertPeopleAndChannels(data)
-		response += " Alerting people now."
+		response += " Time stored."
 	}
 	jsonResp, _ := json.Marshal(JsonResponse{Type:"ephemeral", Text:strings.TrimSpace(response)})
 	fmt.Fprint(w, string(jsonResp))
