@@ -79,7 +79,6 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func AlertChannel(values url.Values) {
-	db.LogMode(true)
 	user := User{}
 	db.FirstOrInit(&user, User{SlackTeamId:values.Get("team_id")})
 	fmt.Println(user)
